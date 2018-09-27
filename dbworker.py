@@ -4,10 +4,11 @@ ORM from http://docs.peewee-orm.com/en/latest/index.html
 from peewee import *
 import datetime
 
+DB_FILE = 'iub.sqlite'
 
 class BaseModel(Model):
     class Meta:
-        database = SqliteDatabase('iub.sqlite')
+        database = SqliteDatabase(DB_FILE)
 
 
 class IUBArchive(BaseModel):
@@ -17,7 +18,11 @@ class IUBArchive(BaseModel):
 
 
 if __name__ == "__main__":
-    db.connect()
+    db = SqliteDatabase(DB_FILE)
     db.create_tables([IUBArchive])
-    # IUBArchive.create(file="1234.xml")
-    # IUBArchive.get(IUBArchive.file == '1234.xml').created_date
+    if (True): # debug - lets insert & select record
+        try:
+            IUBArchive.create(file="test.xml")
+        except IntegrityError as e:
+            print('Record already inserted')
+        print(IUBArchive.get(IUBArchive.file == 'test.xml').created_date)
