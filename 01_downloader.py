@@ -7,7 +7,7 @@ ftp.login("anonymous", "")
 now = datetime.datetime.now()
 year, month, day = now.strftime("%Y,%m,%d").split(',')
 
-day = '26'
+day = '02'
 
 # template to current file
 path = '/{}/{}_{}/{}_{}_{}.tar.gz'.format(year, month, year, day, month, year)

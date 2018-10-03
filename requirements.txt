@@ -1,1 +1,2 @@
 peewee==3.7.0
+xmltodict==0.11.0

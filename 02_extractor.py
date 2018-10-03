@@ -1,12 +1,11 @@
 import datetime
 import os
 import tarfile
-from dbworker import IUBArchive
 
 now = datetime.datetime.now()
 year, month, day = now.strftime("%Y,%m,%d").split(',')
 
-day = '26'
+day = '02'
 
 filename = '{}_{}_{}.tar.gz'.format(day,month,year)
 
