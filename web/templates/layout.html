@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>IUB Monitor @ WD</title>
+      <style type="text/css">
+          body {
+              margin: 0 8px;
+          }
+          .table-sm {
+              font-size: 0.7rem;
+          }
+          .nw {
+              white-space: nowrap;
+          }
+      </style>
+  </head>
+  <body>
+    <h1>IUB Monitor</h1>
+    Codes from <a href="static/cpv_main_v1.0.ods">here</a>
+    <br /><br />
+    <table class="table table-sm table-striped table-bordered table-hover">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col" class="nw">parsed date</th>
+      <th scope="col">created date</th>
+      <th scope="col">name</th>
+      <th scope="col">authority name</th>
+      <th scope="col">procurement type</th>
+      <th scope="col">price from</th>
+      <th scope="col">price to</th>
+      <th scope="col">cpv code</th>
+      <th scope="col">cpv code lv</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in data %}
+        <tr>
+            <th scope="row"><a href="https://pvs.iub.gov.lv/show/{{item.file.replace('.xml','')}}" target="_blank">{{item.file.replace('.xml','')}}</a></th>
+          <td class="nw">{{item.parsed_date}}</td>
+          <td class="nw">{{item.created_date.strftime('%Y-%m-%d %H:%M')}}</td>
+          <td>{{item.general_name}}</td>
+          <td>{{item.general_authority_name}}</td>
+          <td>{{item.general_procurement_type}}</td>
+          <td>{{item.general_price_from}}</td>
+          <td>{{item.general_price_to}}</td>
+          <td class="nw">{{item.main_cpv_code}}</td>
+          <td>{{item.main_cpv_lv}}</td>
+        </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
