@@ -3,7 +3,7 @@ import datetime
 import os
 import tarfile
 import xmltodict
-from dbworker import IUBArchivea
+from dbworker import IUBArchive
 
 ftp = FTP("open.iub.gov.lv")
 ftp.login("anonymous", "")
