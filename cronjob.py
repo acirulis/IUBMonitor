@@ -3,8 +3,7 @@ from processingclass import ProcessingClass
 from dateutil import parser
 
 if len(sys.argv) <= 1:
-    print("Error: Not enough arguments")
-    sys.exit(0)
+    dateTimeObj = False
 elif len(sys.argv) == 2:
     dateTimeObj = parser.parse(sys.argv[1], dayfirst=True)
 else:
@@ -12,8 +11,11 @@ else:
         parser.parse(sys.argv[1], dayfirst=True),
         parser.parse(sys.argv[2], dayfirst=True)
     ]
-if isinstance(dateTimeObj, dict):
+if isinstance(dateTimeObj, object):
+    filename = ProcessingClass.download_archive(dateTimeObj)
+elif isinstance(dateTimeObj, dict):
+    filename = ProcessingClass.download_archive(dateTimeObj[0], dateTimeObj[1])
+else:
     filename = ProcessingClass.download_archive()
-filename = ProcessingClass.download_archive()
-ProcessingClass.extract_archive(filename)
-ProcessingClass.parse_insert()
+# ProcessingClass.extract_archive(filename)
+# ProcessingClass.parse_insert()

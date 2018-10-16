@@ -8,12 +8,14 @@ from dbworker import IUBArchive
 
 class ProcessingClass:
     @staticmethod
-    def download_archive():
+    def download_archive(startdate=False, enddate=False):
         ftp = FTP("open.iub.gov.lv")
         ftp.login("anonymous", "")
-        now = datetime.datetime.today() - datetime.timedelta(1)
+        if not startdate:
+            now = datetime.datetime.today() - datetime.timedelta(1)
+        else:
+            now = startdate
         year, month, day = now.strftime("%Y,%m,%d").split(',')
-        print("Yesterday was {}.{}.{}".format(day, month, year))
         path = '/{}/{}_{}/{}_{}_{}.tar.gz'.format(year, month, year, day, month, year)
         filename = '{}_{}_{}.tar.gz'.format(day, month, year)
         try:
