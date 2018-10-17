@@ -7,15 +7,20 @@ from dbworker import IUBArchive
 
 
 class ProcessingClass:
-    @staticmethod
-    def download_archive(startdate=False, enddate=False):
+
+    def __init__(self, date_time_obj):
+        if isinstance(date_time_obj, dict):
+            self.start_date = date_time_obj[0]
+            self.end_date = date_time_obj[1]
+        elif isinstance(date_time_obj, datetime.datetime):
+            self.start_date = date_time_obj
+        else:
+            self.start_date = datetime.datetime.today() - datetime.timedelta(1)
+
+    def download_archive(self):
         ftp = FTP("open.iub.gov.lv")
         ftp.login("anonymous", "")
-        if not startdate:
-            now = datetime.datetime.today() - datetime.timedelta(1)
-        else:
-            now = startdate
-        year, month, day = now.strftime("%Y,%m,%d").split(',')
+        year, month, day = self.start_date.strftime("%Y,%m,%d").split(',')
         path = '/{}/{}_{}/{}_{}_{}.tar.gz'.format(year, month, year, day, month, year)
         filename = '{}_{}_{}.tar.gz'.format(day, month, year)
         try:
