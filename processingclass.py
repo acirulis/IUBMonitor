@@ -53,14 +53,18 @@ class ProcessingClass:
                         continue
                     if not 'price_to' in document['general']:
                         document['general']['price_to'] = None
-                    IUBArchive.create(file=filename,
-                                      created_date=datetime.datetime.fromtimestamp(
-                                          int(document['creation_date_stamp'])),
-                                      general_name=document['general']['name'],
-                                      general_authority_name=document['general']['authority_name'],
-                                      general_procurement_type=document['general']['procurement_type'],
-                                      general_price_from=document['general']['price_from'],
-                                      general_price_to=document['general']['price_to'],
-                                      main_cpv_code=document['general']['main_cpv']['code'],
-                                      main_cpv_lv=document['general']['main_cpv']['lv'],
-                                      )
+                    if IUBArchive.get_or_none(IUBArchive.general_name == document['general']['name']):
+                        continue
+                    else:
+                        IUBArchive.create(file=filename,
+                                          created_date=datetime.datetime.fromtimestamp(
+                                              int(document['creation_date_stamp'])),
+                                          general_name=document['general']['name'],
+                                          general_authority_name=document['general']['authority_name'],
+                                          general_procurement_type=document['general']['procurement_type'],
+                                          general_price_from=document['general']['price_from'],
+                                          general_price_to=document['general']['price_to'],
+                                          main_cpv_code=document['general']['main_cpv']['code'],
+                                          main_cpv_lv=document['general']['main_cpv']['lv'],
+                                          )
+                os.remove(filename)
