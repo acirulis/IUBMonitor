@@ -12,6 +12,5 @@ else:
         parser.parse(sys.argv[2], dayfirst=True)
     ]
 processingClass = ProcessingClass(dateTimeObj)
-filename = processingClass.download_archive()
-processingClass.extract_archive(filename)
+processingClass.download_archive()
 processingClass.parse_insert()

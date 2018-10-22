@@ -17,10 +17,9 @@ class ProcessingClass:
         else:
             self.start_date = datetime.datetime.today() - datetime.timedelta(1)
 
-    def download_archive(self):
-        ftp = FTP("open.iub.gov.lv")
-        ftp.login("anonymous", "")
-        year, month, day = self.start_date.strftime("%Y,%m,%d").split(',')
+    @staticmethod
+    def download_archive_file(date_time, ftp):
+        year, month, day = date_time.strftime("%Y,%m,%d").split(',')
         path = '/{}/{}_{}/{}_{}_{}.tar.gz'.format(year, month, year, day, month, year)
         filename = '{}_{}_{}.tar.gz'.format(day, month, year)
         try:
@@ -30,8 +29,19 @@ class ProcessingClass:
             return filename
         except Exception as e:
             print(e)
-        finally:
-            ftp.quit()
+
+    def download_archive(self):
+        ftp = FTP("open.iub.gov.lv")
+        ftp.login("anonymous", "")
+        if hasattr(self, 'end_date'):
+            while self.start_date <= self.end_date:
+                filename = ProcessingClass.download_archive_file(self.start_date, ftp)
+                self.start_date = self.start_date + datetime.timedelta(days=1)
+                ProcessingClass.extract_archive(filename)
+        else:
+            filename = ProcessingClass.download_archive_file(self.start_date, ftp)
+            ProcessingClass.extract_archive(filename)
+        ftp.quit()
 
     @staticmethod
     def extract_archive(filename):
@@ -50,21 +60,22 @@ class ProcessingClass:
                     x = xmltodict.parse(f.read())
                     document = x['document']
                     if document['type'] in ['notice_299_contract', 'notice_299_results', 'notice_299_changes']:
+                        os.remove(full_path)
+                        continue
+                    if IUBArchive.get_or_none(IUBArchive.general_name == document['general']['name']):
+                        os.remove(full_path)
                         continue
                     if not 'price_to' in document['general']:
                         document['general']['price_to'] = None
-                    if IUBArchive.get_or_none(IUBArchive.general_name == document['general']['name']):
-                        continue
-                    else:
-                        IUBArchive.create(file=filename,
-                                          created_date=datetime.datetime.fromtimestamp(
-                                              int(document['creation_date_stamp'])),
-                                          general_name=document['general']['name'],
-                                          general_authority_name=document['general']['authority_name'],
-                                          general_procurement_type=document['general']['procurement_type'],
-                                          general_price_from=document['general']['price_from'],
-                                          general_price_to=document['general']['price_to'],
-                                          main_cpv_code=document['general']['main_cpv']['code'],
-                                          main_cpv_lv=document['general']['main_cpv']['lv'],
-                                          )
-                os.remove(filename)
+                    IUBArchive.create(file=filename,
+                                      created_date=datetime.datetime.fromtimestamp(
+                                          int(document['creation_date_stamp'])),
+                                      general_name=document['general']['name'],
+                                      general_authority_name=document['general']['authority_name'],
+                                      general_procurement_type=document['general']['procurement_type'],
+                                      general_price_from=document['general']['price_from'],
+                                      general_price_to=document['general']['price_to'],
+                                      main_cpv_code=document['general']['main_cpv']['code'],
+                                      main_cpv_lv=document['general']['main_cpv']['lv'],
+                                      )
+                    os.remove(full_path)
