@@ -5,7 +5,7 @@ from peewee import *
 from datetime import datetime
 import os
 
-DB_FILE = os.path.join(os.path.dirname(__file__),'iub.sqlite')
+DB_FILE = os.path.join(os.path.dirname(__file__), 'iub.sqlite')
 
 
 class BaseModel(Model):
